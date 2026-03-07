@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Vocab.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ambient amb-1"></div>
+<div class="ambient amb-2"></div>
+
+<header class="header">
+  <div class="logo">Vocab<span>.</span></div>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-dot known"></span><span id="sKnown">0</span></div>
+    <div class="stat"><span class="stat-dot learning"></span><span id="sLearn">0</span></div>
+    <div class="stat"><span class="stat-dot remaining"></span><span id="sRemain">0</span></div>
+    <div class="progress-track"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
+  </div>
+</header>
+
+<div class="card-area" id="cardArea">
+  <div class="card" id="card">
+    <div class="card-label" id="cLabel">Kelime</div>
+    <div class="card-content" id="cText">Yükleniyor…</div>
+    <div class="tap-hint">çevirmek için dokun</div>
+  </div>
+
+  <div class="complete" id="doneScreen">
+    <div class="complete-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div class="complete-title">Tamamlandı!</div>
+    <div class="complete-sub">Tüm kelimeleri gözden geçirdin.</div>
+    <div class="c-stats">
+      <div class="cs-item"><div class="cs-num g" id="fKnown">0</div><div class="cs-label">Biliyorum</div></div>
+      <div class="cs-item"><div class="cs-num r" id="fLearn">0</div><div class="cs-label">Öğreniyorum</div></div>
+    </div>
+    <button class="btn btn-restart" id="btnRestart">Baştan Başla</button>
+    <button class="btn btn-review" id="btnReview">Zayıfları Tekrarla</button>
+    <div class="kbd-hints">
+      <span class="kbd-hint"><span class="kbd">Enter</span> baştan başla</span>
+      <span class="kbd-hint"><span class="kbd">R</span> zayıfları tekrarla</span>
+    </div>
+  </div>
+</div>
+
+<div class="actions" id="actionsPanel">
+  <div class="action-row">
+    <button class="btn btn-know" id="btnKnow">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Biliyorum
+    </button>
+    <button class="btn btn-learn" id="btnLearn">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      Öğreniyorum
+    </button>
+  </div>
+  <div class="kbd-hints">
+    <span class="kbd-hint"><span class="kbd">Space</span> çevir</span>
+    <span class="kbd-hint"><span class="kbd">→</span> biliyorum</span>
+    <span class="kbd-hint"><span class="kbd">←</span> öğreniyorum</span>
+    <span class="kbd-hint"><span class="kbd">Esc</span> sıfırla</span>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
