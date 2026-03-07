@@ -2,7 +2,11 @@
 
 A minimal, keyboard-first flashcard app for learning English vocabulary — built with vanilla HTML, CSS, and JavaScript. No frameworks, no dependencies, no build step.
 
-![screenshot](https://placehold.co/800x450/0e0f11/c9a55a?text=Vocab.)
+**Live demo → [mertcobn.github.io/vocab-flashcards](https://mertcobn.github.io/vocab-flashcards/)**
+
+## Word List
+
+The words in this app are sourced from the YouTube channel **[Çağrı Simlary YDS Kelimeleri](https://www.youtube.com/@cagrisimlarydskelimeleri)**. New words will be added over time as the channel releases new content.
 
 ## Features
 
@@ -28,12 +32,13 @@ A minimal, keyboard-first flashcard app for learning English vocabulary — buil
 
 ## Getting Started
 
-Because the app fetches `words.json` via `fetch()`, it needs to be served over HTTP (not opened as a `file://` URL).
+The live version is always available at **[mertcobn.github.io/vocab-flashcards](https://mertcobn.github.io/vocab-flashcards/)** — no setup needed.
+
+To run locally, the app needs to be served over HTTP (not opened as a `file://` URL, since it fetches `words.json`).
 
 ### Option 1 — Python (no install needed)
 
 ```bash
-cd vocab-flashcards
 python3 -m http.server 8000
 ```
 
