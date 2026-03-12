@@ -14,12 +14,23 @@
 <div class="ambient amb-2"></div>
 
 <header class="header">
-  <div class="logo">Vocab<span>.</span></div>
+  <div class="header-top">
+    <div class="logo">Vocab<span>.</span></div>
+    <button class="btn-list" id="btnList">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Liste
+    </button>
+  </div>
   <div class="stats-bar">
     <div class="stat"><span class="stat-dot known"></span><span id="sKnown">0</span></div>
     <div class="stat"><span class="stat-dot learning"></span><span id="sLearn">0</span></div>
     <div class="stat"><span class="stat-dot remaining"></span><span id="sRemain">0</span></div>
     <div class="progress-track"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
+  </div>
+  <div class="range-badge" id="rangeBadge" style="display:none">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span id="rangeBadgeText">1–20 aralığı</span>
+    <button class="range-badge-exit" id="btnExitRange">Tüm listeye dön</button>
   </div>
 </header>
 
@@ -65,6 +76,35 @@
     <span class="kbd-hint"><span class="kbd">→</span> biliyorum</span>
     <span class="kbd-hint"><span class="kbd">←</span> öğreniyorum</span>
     <span class="kbd-hint"><span class="kbd">Esc</span> sıfırla</span>
+  </div>
+</div>
+
+<!-- Word List Overlay -->
+<div class="wl-overlay" id="wlOverlay">
+  <div class="wl-panel">
+    <div class="wl-head">
+      <button class="wl-back" id="wlClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Geri Dön
+      </button>
+      <div class="wl-title">Kelime Listesi <span class="wl-total" id="wlTotal"></span></div>
+    </div>
+    <div class="wl-range-bar">
+      <div class="wl-range-left">
+        <span class="wl-range-label">Aralık seç</span>
+        <span class="wl-range-hint" id="rangeHint">20 kelime</span>
+      </div>
+      <div class="wl-range-inputs">
+        <input class="wl-input" type="number" id="rangeFrom" min="1" value="1">
+        <span class="wl-dash">—</span>
+        <input class="wl-input" type="number" id="rangeTo" min="1" value="20">
+        <button class="btn btn-range-start" id="btnStartRange">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Çalış
+        </button>
+      </div>
+    </div>
+    <div class="wl-list" id="wlList"></div>
   </div>
 </div>
 

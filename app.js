@@ -23,6 +23,7 @@
   let showBack     = false;
   let locked       = false;
   let swipeFlag    = false;
+  let currentRange = null;   /* { from, to } veya null */
 
   /* ---------- DOM ---------- */
   const card       = document.getElementById("card");
@@ -34,6 +35,10 @@
   const pFill      = document.getElementById("pFill");
   const doneScreen = document.getElementById("doneScreen");
   const actions    = document.getElementById("actionsPanel");
+  const wlOverlay  = document.getElementById("wlOverlay");
+  const wlList     = document.getElementById("wlList");
+  const rangeFrom  = document.getElementById("rangeFrom");
+  const rangeTo    = document.getElementById("rangeTo");
 
   /* ---------- LOCALSTORAGE ---------- */
   const LS_KEY = "vocab_progress";
@@ -113,6 +118,18 @@
     showBack = false;
   }
 
+  /* ---------- RANGE BADGE ---------- */
+  function showRangeBadge(from, to) {
+    currentRange = { from, to };
+    document.getElementById("rangeBadgeText").textContent = from + "–" + to + " aralığı";
+    document.getElementById("rangeBadge").style.display = "flex";
+  }
+
+  function hideRangeBadge() {
+    currentRange = null;
+    document.getElementById("rangeBadge").style.display = "none";
+  }
+
   /* ---------- INIT (tam sıfırlama) ---------- */
   function init() {
     knownSet.clear();
@@ -120,6 +137,7 @@
     lastWord     = null;
     sessionWords = WORDS;
     localStorage.removeItem(LS_KEY);
+    hideRangeBadge();
     resetCardUI();
     deck = buildDeck(WORDS.slice());
     updateStats();
@@ -251,6 +269,67 @@
     showNext();
   }
 
+  /* ---------- WORD LIST OVERLAY ---------- */
+  function updateRangeHint() {
+    const from = Math.max(1, parseInt(rangeFrom.value, 10) || 1);
+    const to   = Math.max(from, Math.min(parseInt(rangeTo.value, 10) || from, WORDS.length));
+    const count = to - from + 1;
+    document.getElementById("rangeHint").textContent = count + " kelime";
+  }
+
+  function openWordList() {
+    /* kelime listesini doldur (ilk açılışta veya WORDS değiştiyse) */
+    if (wlList.children.length !== WORDS.length) {
+      wlList.innerHTML = "";
+      WORDS.forEach((w, i) => {
+        const item = document.createElement("div");
+        item.className = "wl-item";
+        item.innerHTML =
+          '<span class="wl-num">' + (i + 1) + '</span>' +
+          '<span class="wl-word">' + w.word + '</span>' +
+          '<span class="wl-meaning">' + w.meaning + '</span>';
+        wlList.appendChild(item);
+      });
+      rangeFrom.max = WORDS.length;
+      rangeTo.max   = WORDS.length;
+      rangeTo.value = Math.min(20, WORDS.length);
+      document.getElementById("wlTotal").textContent = WORDS.length + " kelime";
+      updateRangeHint();
+    }
+    wlOverlay.classList.add("active");
+  }
+
+  function closeWordList() {
+    wlOverlay.classList.remove("active");
+  }
+
+  /* ---------- RANGE SESSION ---------- */
+  function startRangeSession() {
+    let from = parseInt(rangeFrom.value, 10);
+    let to   = parseInt(rangeTo.value, 10);
+
+    /* sınır düzeltmeleri */
+    from = Math.max(1, Math.min(from, WORDS.length));
+    to   = Math.max(from, Math.min(to, WORDS.length));
+    rangeFrom.value = from;
+    rangeTo.value   = to;
+
+    const subset = WORDS.slice(from - 1, to);   /* 1-indexed, inclusive */
+
+    /* bu aralıktaki kelimelerin önceki işaretlerini temizle (taze oturum) */
+    subset.forEach(w => { knownSet.delete(w.word); learnSet.delete(w.word); });
+
+    sessionWords = subset;
+    lastWord     = null;
+
+    deck = buildDeck(subset.slice());
+    closeWordList();
+    showRangeBadge(from, to);
+    resetCardUI();
+    updateStats();
+    showNext();
+  }
+
   /* ================================================================
      EVENTS
      ================================================================ */
@@ -263,13 +342,29 @@
   });
 
   /* butonlar */
-  document.getElementById("btnKnow").addEventListener("click",    () => markCard("known"));
-  document.getElementById("btnLearn").addEventListener("click",   () => markCard("learning"));
-  document.getElementById("btnRestart").addEventListener("click", () => init());
-  document.getElementById("btnReview").addEventListener("click",  () => reviewWeak());
+  document.getElementById("btnKnow").addEventListener("click",       () => markCard("known"));
+  document.getElementById("btnLearn").addEventListener("click",      () => markCard("learning"));
+  document.getElementById("btnRestart").addEventListener("click",    () => init());
+  document.getElementById("btnReview").addEventListener("click",     () => reviewWeak());
+  document.getElementById("btnList").addEventListener("click",       () => openWordList());
+  document.getElementById("wlClose").addEventListener("click",       () => closeWordList());
+  document.getElementById("btnStartRange").addEventListener("click", () => startRangeSession());
+  document.getElementById("btnExitRange").addEventListener("click",  () => init());
+
+  /* overlay dışına tıklayınca kapat */
+  wlOverlay.addEventListener("click", e => { if (e.target === wlOverlay) closeWordList(); });
+
+  /* aralık değişince hint güncelle */
+  rangeFrom.addEventListener("input", updateRangeHint);
+  rangeTo.addEventListener("input", updateRangeHint);
 
   /* klavye */
   document.addEventListener("keydown", e => {
+    /* liste overlay açıksa Escape ile kapat */
+    if (wlOverlay.classList.contains("active")) {
+      if (e.code === "Escape") { e.preventDefault(); closeWordList(); }
+      return;
+    }
     if (doneScreen.classList.contains("active")) {
       /* done ekranında: Enter → baştan başla, R → zayıfları tekrarla */
       if (e.code === "Enter") { e.preventDefault(); init(); }
